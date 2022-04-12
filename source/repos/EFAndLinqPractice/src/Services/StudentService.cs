@@ -1,5 +1,6 @@
 using EFAndLinqPractice_SchoolAPI.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EFAndLinqPractice_SchoolAPI.Services
 {
@@ -14,27 +15,30 @@ namespace EFAndLinqPractice_SchoolAPI.Services
 
         public Student Create(Student student)
         {
-            throw new System.NotImplementedException();
+            _dbContext.Add(student);
+            _dbContext.SaveChanges();
+            int lastInsertedId = student.Id;
+            return GetById(lastInsertedId);
         }
 
         public Student GetById(int id)
         {
-            throw new System.NotImplementedException();
+          return  _dbContext.Students.FirstOrDefault(x => x.Id == id);
         }
 
         public IEnumerable<Student> GetAll()
         {
-            throw new System.NotImplementedException();
+            return _dbContext.Students.ToList();
         }
 
         public IEnumerable<Student> GetStudentsByCourseId(int courseId)
         {
-            throw new System.NotImplementedException();
+            return _dbContext.Courses.Where(x => x.Id == courseId).SelectMany(c => c.Students).ToList();
         }
 
         public void DeleteById(int id)
         {
-            throw new System.NotImplementedException();
+            _dbContext.Remove(_dbContext.Students.Single(x => x.Id == id));
         }
     }
 }

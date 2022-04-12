@@ -19,14 +19,22 @@ namespace EFAndLinqPractice_SchoolAPI.Controllers
         public IActionResult GetAllStudents()
         {
             var students = _studentService.GetAll();
+            if (students == null)
+            {
+                return NoContent();
+            }
             
             return Ok(students);
         }
 
-        [HttpGet("/{id:int}")]
+        [HttpGet("{id:int}")]
         public IActionResult GetStudent(int id)
         {
             var student = _studentService.GetById(id);
+            if (student == null)
+            {
+                return NotFound();
+            }
             
             return Ok(student);
         }
@@ -35,6 +43,10 @@ namespace EFAndLinqPractice_SchoolAPI.Controllers
         public IActionResult GetStudentsByCourseId(int courseId)
         {
             var students = _studentService.GetStudentsByCourseId(courseId);
+            if (students == null)
+            {
+                return NoContent();
+            }
             
             return Ok(students);
         }
@@ -47,11 +59,17 @@ namespace EFAndLinqPractice_SchoolAPI.Controllers
             return CreatedAtAction(nameof(GetStudent), new { id = createdStudent.Id}, student);
         }
 
-        [HttpDelete("/{id:int}")]
+        [HttpDelete("{id:int}")]
         public IActionResult DeleteStudent(int id)
         {
             if (id == 0)
                 return BadRequest("Not a valid student id");
+
+            var student = _studentService.GetById(id);
+            if (student == null)
+            {
+                return NotFound();
+            }
             
             _studentService.DeleteById(id);
             
